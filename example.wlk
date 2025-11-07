@@ -52,34 +52,38 @@ class Mascota {
 }
 
 class Localidad {
-  var habitantes
-  const tamaño
+  var ejercito = []
 
-  method habitantes() = habitantes
-  method tamaño() = tamaño
+  method poderOfensivo() = ejercito.poderOfensivo()
+  method serOcupada(unEjercito)
 }
 
 class Aldea inherits Localidad {
-  method defensas()
+  const maxTropa
+  override method serOcupada(unEjercito) {
+    if(maxTropa < unEjercito.tamaño()){
+      ejercito = [new Ejercito (tropa = unEjercito.losMasPoderosos())]
+      unEjercito.quitarLosMasFuertes()
+    }
+    else {ejercito = unEjercito}
+  }
 }
 
 class Ciudad inherits Localidad {
-  
-  method defensas() = Ejercito.potencialTotal() + 300
+  override method poderOfensivo() = super() + 300
+  override method serOcupada(unEjercito) {ejercito = unEjercito}
 }
 
 class Ejercito {
-  const miembros = []
+  const tropa = []
 
-  method potencialTotal() = miembros.sum({m => m.potencial()})
-}
-
-class Invasion {
-  const ejercitoInvasor
-  const ejercitoDefensor
-  method realizarInvasion() {
-    if(ejercitoInvasor.potencialTotal()> ejercitoDefensor.potencialTotal()){
-      
-    }
+  method tamaño() = tropa.size()
+  method poderOfensivo() = tropa.sum({m => m.potencial()})
+  method invadir(unaLocalidad) {
+    if(self.puedeInvadir(unaLocalidad)){unaLocalidad.serOcupada(self)}
   }
+  method puedeInvadir(unaLocalidad) = self.poderOfensivo() > unaLocalidad.poderOfensivo()
+  method losMasPoderosos() = self.ordenadosMasPoderosos().take(10)
+  method ordenadosMasPoderosos() = tropa.sortBy({t1, t2 => t1.poderOfensivo() > t2.poderOfensivo()})
+  method quitarLosMasFuertes() {tropa.removeAll(self.losMasPoderosos())}
 }
