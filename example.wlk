@@ -15,7 +15,7 @@ class Personaje {
 }
 
 class Orco inherits Personaje {
-  override method potencial() = if(rol == brujo) fuerza * 10 + self.potencial() * 0.10
+  override method potencial() = super() + self.potencial() * 0.10
   override method esInteligente() = false
 }
 
